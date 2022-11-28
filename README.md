@@ -15,3 +15,4 @@ wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --d
 sudo apt-get update
 sudo apt-get install virtualbox-7.0
 
+. 
