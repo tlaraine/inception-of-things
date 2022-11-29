@@ -1,0 +1,60 @@
+Vagrant.configure("2") do |config|
+
+    config.vm.box = "centos/8"
+    config.vm.box_url = "file:///media/sf_school-21/CentOS-8.box"
+    #config.vm.box_url = "https://cloud.centos.org/centos/8/vagrant/x86_64/images/CentOS-8-Vagrant-8.4.2105-20210603.0.x86_64.vagrant-virtualbox.box"
+    #config.vm.box_url = "https://app.vagrantup.com/centos/boxes/8"
+    #config.vm.box = "centos/8"
+    #config.vm.synced_folder ".", "/vagrant", type: "nfs"
+    #config.vm.network "private_network", type: "dhcp"
+    #config.ssh.forward_agent = "false"
+    #config.ssh.keys_only = "true"
+
+    config.vm.define "jrayeS" do |control|
+        control.vm.hostname = "jrayeS"
+        control.vm.network "private_network", ip: "192.168.56.110"
+        config.vm.provision "shell", inline: <<-SHELL
+        cd /etc/yum.repos.d/
+        sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+        sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+        sudo yum update -y
+        yum install -y net-tools
+        SHELL
+
+        control.vm.provider "virtualbox" do |v|
+            v.customize ["modifyvm", :id, "--name", "jrayeS"]
+            # v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+            # v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+            v.memory = 512
+            v.cpus = 1
+        end
+
+        control.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/tmp/id_rsa.pub"
+        control.vm.provision "file", source: "~/.ssh/id_rsa", destination: "/tmp/id_rsa"
+        control.vm.provision "shell", privileged: true, path: "scripts/installS.sh"
+    end
+
+    config.vm.define "jrayeSW" do |control|
+        control.vm.hostname = "jrayeSW"
+        control.vm.network "private_network", ip: "192.168.56.111"
+        config.vm.provision "shell", inline: <<-SHELL
+        cd /etc/yum.repos.d/
+        sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+        sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+        sudo yum update -y
+        SHELL
+
+        control.vm.provider "virtualbox" do |v|
+          v.customize ["modifyvm", :id, "--name", "jrayeSW"]
+        #   v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+        #   v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+          v.memory = 512
+          v.cpus = 1
+        end
+
+        control.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/tmp/id_rsa.pub"
+        control.vm.provision "file", source: "~/.ssh/id_rsa", destination: "/tmp/id_rsa"
+        control.vm.provision "shell", privileged: true, path: "scripts/installSW.sh"
+    end
+    
+end

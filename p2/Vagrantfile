@@ -1,0 +1,32 @@
+Vagrant.configure("2") do |config|
+
+    config.vm.box = "centos/8"
+    config.vm.box_url = "https://app.vagrantup.com/centos/boxes/8"
+
+    config.vm.define "jrayeP2" do |control|
+
+        control.vm.hostname = "jrayeP2"
+        control.vm.network "private_network", ip: "192.168.56.110"
+
+        control.vm.provision "shell", inline: <<-SHELL
+        cd /etc/yum.repos.d/
+        sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+        sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+        sudo yum update -y
+        yum install -y net-tools
+        SHELL
+
+        control.vm.provider "virtualbox" do |v|
+            v.name = "jrayeP2"
+            v.memory = 512
+            v.cpus = 1
+        end
+
+        control.vm.provision "file", source: "confs/deployment.yaml", destination: "/tmp/deployment.yaml"
+        control.vm.provision "file", source: "confs/app1", destination: "/tmp/app1"
+        control.vm.provision "file", source: "confs/app2", destination: "/tmp/app2"
+        control.vm.provision "file", source: "confs/app3", destination: "/tmp/app3"
+
+        control.vm.provision "shell", privileged: true, path: "scripts/installS.sh"
+    end
+end
