@@ -1,32 +1,37 @@
+
+# master config
+MASTER_NAME = 'TlaraineS'
+MASTER_HOSTNAME = 'TlaraineS'
+MASTER_IP = '192.168.56.110'
+
+# machines config
+MEM = 1024
+CPU = 1
+
+# create machines config
 Vagrant.configure("2") do |config|
+	config.vm.box = "bento/debian-11"
+	config.vm.box_url = "file:///home/tlaraine/21-school/iot/debian11.box"
+	# config.vm.box_url = "https://app.vagrantup.com/bento/boxes/debian-11/versions/202207.19.0/providers/virtualbox.box"
+	config.vm.provider "virtualbox" do |v|
+		v.memory = MEM
+		v.cpus = CPU
+		# for connect with SSH on both machines with no password
+		id_rsa_pub = File.read("#{Dir.home}/.ssh/id_rsa.pub")
+  		config.vm.provision "copy ssh public key", type: "shell",
+    	  inline: "echo \"#{id_rsa_pub}\" >> /home/vagrant/.ssh/authorized_keys"
+	end
 
-    config.vm.box = "centos/8"
-    config.vm.box_url = "https://app.vagrantup.com/centos/boxes/8"
-
-    config.vm.define "jrayeP2" do |control|
-
-        control.vm.hostname = "jrayeP2"
-        control.vm.network "private_network", ip: "192.168.56.110"
-
-        control.vm.provision "shell", inline: <<-SHELL
-        cd /etc/yum.repos.d/
-        sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-        sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-        sudo yum update -y
-        yum install -y net-tools
-        SHELL
-
-        control.vm.provider "virtualbox" do |v|
-            v.name = "jrayeP2"
-            v.memory = 512
-            v.cpus = 1
-        end
-
-        control.vm.provision "file", source: "confs/deployment.yaml", destination: "/tmp/deployment.yaml"
-        control.vm.provision "file", source: "confs/app1", destination: "/tmp/app1"
-        control.vm.provision "file", source: "confs/app2", destination: "/tmp/app2"
-        control.vm.provision "file", source: "confs/app3", destination: "/tmp/app3"
-
-        control.vm.provision "shell", privileged: true, path: "scripts/installS.sh"
-    end
+  # master node config
+	config.vm.define MASTER_NAME do |master|
+		master.vm.hostname = MASTER_HOSTNAME
+		master.vm.network :private_network, ip: MASTER_IP
+		# configure shared folder
+		master.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+		# run script for master node with argument
+		master.vm.provision "shell", privileged: true, path: "scripts/setup.sh", args: [MASTER_IP]
+		master.vm.provider "virtualbox" do |v|
+			v.name = MASTER_NAME
+		end
+	end
 end

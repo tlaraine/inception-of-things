@@ -1,0 +1,7 @@
+Log created: 2022-12-07T07:02:01.120279000Z
+Process ID:  6000 (0x1770)
+Parent PID:  1877 (0x755)
+Executable:  /usr/lib/virtualbox/VBoxSVC
+Arg[0]: /usr/lib/virtualbox/VBoxSVC
+Arg[1]: --auto-shutdown
+AddRef: illegal refcnt=3221225469 state=2

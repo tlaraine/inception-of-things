@@ -1,60 +1,56 @@
+
+# master config
+MASTER_NODE = 'TlaraineS'
+MASTER_HOSTNAME = 'TlaraineS'
+MASTER_IP = '192.168.56.110'
+
+# worker config
+WORKER_NODE = 'TlaraineSW'
+WORKER_HOSTNAME = 'TlaraineSW'
+WORKER_IP = '192.168.56.111'
+
+# machines config
+MEM = 1024
+CPU = 1
+
+# create machines config
 Vagrant.configure("2") do |config|
+	config.vm.box = "bento/debian-11"
+	config.vm.box_url = "file:///home/tlaraine/21-school/iot/debian11.box"
+	# config.vm.box_url = "https://app.vagrantup.com/bento/boxes/debian-11/versions/202207.19.0/providers/virtualbox.box"
+	
+	config.vm.provider "virtualbox" do |v|
+		v.memory = MEM
+		v.cpus = CPU
+		# for connect with SSH on both machines with no password
+		id_rsa_pub = File.read("#{Dir.home}/.ssh/id_rsa.pub")
+  		config.vm.provision "copy ssh public key", type: "shell",
+    	  inline: "echo \"#{id_rsa_pub}\" >> /home/vagrant/.ssh/authorized_keys"
+	end
 
-    config.vm.box = "centos/8"
-    config.vm.box_url = "file:///media/sf_school-21/CentOS-8.box"
-    #config.vm.box_url = "https://cloud.centos.org/centos/8/vagrant/x86_64/images/CentOS-8-Vagrant-8.4.2105-20210603.0.x86_64.vagrant-virtualbox.box"
-    #config.vm.box_url = "https://app.vagrantup.com/centos/boxes/8"
-    #config.vm.box = "centos/8"
-    #config.vm.synced_folder ".", "/vagrant", type: "nfs"
-    #config.vm.network "private_network", type: "dhcp"
-    #config.ssh.forward_agent = "false"
-    #config.ssh.keys_only = "true"
+  # master node config
+	config.vm.define MASTER_NODE do |master|
+		master.vm.hostname = MASTER_HOSTNAME
+		master.vm.network :private_network, ip: MASTER_IP
+		# configure shared folder
+		master.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+		# run script for master node with argument
+		master.vm.provision "shell", privileged: true, path: "scripts/master_node_setup.sh", args: [MASTER_IP]
+		master.vm.provider "virtualbox" do |v|
+			v.name = MASTER_NODE
+		end
+	end
 
-    config.vm.define "jrayeS" do |control|
-        control.vm.hostname = "jrayeS"
-        control.vm.network "private_network", ip: "192.168.56.110"
-        config.vm.provision "shell", inline: <<-SHELL
-        cd /etc/yum.repos.d/
-        sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-        sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-        sudo yum update -y
-        yum install -y net-tools
-        SHELL
-
-        control.vm.provider "virtualbox" do |v|
-            v.customize ["modifyvm", :id, "--name", "jrayeS"]
-            # v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-            # v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-            v.memory = 512
-            v.cpus = 1
-        end
-
-        control.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/tmp/id_rsa.pub"
-        control.vm.provision "file", source: "~/.ssh/id_rsa", destination: "/tmp/id_rsa"
-        control.vm.provision "shell", privileged: true, path: "scripts/installS.sh"
-    end
-
-    config.vm.define "jrayeSW" do |control|
-        control.vm.hostname = "jrayeSW"
-        control.vm.network "private_network", ip: "192.168.56.111"
-        config.vm.provision "shell", inline: <<-SHELL
-        cd /etc/yum.repos.d/
-        sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-        sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-        sudo yum update -y
-        SHELL
-
-        control.vm.provider "virtualbox" do |v|
-          v.customize ["modifyvm", :id, "--name", "jrayeSW"]
-        #   v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-        #   v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-          v.memory = 512
-          v.cpus = 1
-        end
-
-        control.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/tmp/id_rsa.pub"
-        control.vm.provision "file", source: "~/.ssh/id_rsa", destination: "/tmp/id_rsa"
-        control.vm.provision "shell", privileged: true, path: "scripts/installSW.sh"
-    end
-    
+  # worker node config
+	config.vm.define WORKER_NODE do |worker|
+		worker.vm.hostname = WORKER_HOSTNAME
+		worker.vm.network :private_network, ip: WORKER_IP
+		# configure shared folder
+		worker.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+		# run script for worker node with arguments
+		worker.vm.provision "shell", privileged: true, path: "scripts/worker_node_setup.sh", args: [MASTER_IP, WORKER_IP]
+		worker.vm.provider "virtualbox" do |v|
+			v.name = WORKER_NODE 
+		end
+	end
 end
