@@ -27,6 +27,7 @@ sudo cp argocd /usr/bin/
 # sudo kubectl apply -f confs/wil-app.yml
 # Connect ArgoCD to that repository
 sudo kubectl apply -f confs/config.yml
+
 while [ true ]
 	do
 		i=$(sudo kubectl get pod -n argocd | grep "1/1" | wc -l)
@@ -38,8 +39,20 @@ while [ true ]
 			echo -n "\rInitializing cluster..."
 		fi
 	done;
+
 sudo kubectl apply -f confs/wil-app.yml
 
+while [ true ]
+	do
+		i=$(sudo kubectl get pod -n dev gocd | grep "1/1" | wc -l)
+		if [ $i = 7 ]
+		then
+			echo "\rReady!"
+			break
+		else
+			echo -n "\rInitializing cluster..."
+		fi
+	done;
 # ===========ArgoCD UI============= 
 # Enable port redirection
 while true
