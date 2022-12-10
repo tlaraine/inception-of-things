@@ -40,11 +40,11 @@ while [ true ]
 		fi
 	done;
 
-sudo kubectl apply -f confs/wil-app.yml
+#sudo kubectl apply -f confs/wil-app.yml
 
 while [ true ]
 	do
-		i=$(sudo kubectl get pod -n dev gocd | grep "1/1" | wc -l)
+		i=$(sudo kubectl get pod -n dev | grep "1/1" | wc -l)
 		if [ $i = 7 ]
 		then
 			echo "\rReady!"
