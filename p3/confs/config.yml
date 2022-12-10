@@ -1,18 +1,38 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: argocd-wilapp
+#   namespace: argocd
+# spec:
+#   destination:
+#     namespace: dev
+#     server: https://kubernetes.default.svc
+#   project: default
+#   source:
+#     repoURL: https://github.com/lnicosia/lnicosia-IoT-config
+#     path: .
+#     targetRevision: master
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-wilapp
+  name: tlaraine-iot-app
   namespace: argocd
 spec:
-  destination:
-    namespace: dev
-    server: https://kubernetes.default.svc
   project: default
   source:
-    repoURL: https://github.com/lnicosia/lnicosia-IoT-config
-    path: .
-    targetRevision: master
+    repoURL: 'git@github.com:tlaraine/iotk3d.git'
+    path: manifests
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: dev
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
