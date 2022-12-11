@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-wilapp
+  namespace: argocd
+spec:
+  destination:
+    namespace: dev
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: http://192.168.42.110/k3d/lumenthi.git
+    path: .
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
