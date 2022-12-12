@@ -7,16 +7,18 @@
 # you're doing.
 Vagrant.configure("2") do |config|
 	config.vm.box = "centos/8"
-	config.vm.define "lumenthiS" do |lumenthiS|
-		lumenthiS.vm.hostname = "lumenthiS"
-		lumenthiS.vm.network "private_network",
-			:ip => "192.168.42.110"
-		lumenthiS.vm.provider :libvirt do |libvirt|
-			libvirt.cpus = 4
-			libvirt.memory = 4096
-			libvirt.management_network_name = 'vagrant-libvirt'
-			libvirt.management_network_address = '192.168.42.2/24'
+	config.vm.define "tlaraineS" do |tlaraineS|
+		tlaraineS.vm.hostname = "tlaraineS"
+		config.vm.box_url = "file:///home/tlaraine/21-school/iot/CentOS-8.box"
+
+		tlaraineS.vm.network "private_network",
+			:ip => "192.168.56.110"
+			tlaraineS.vm.provider :v do |v|
+			v.cpus = 4
+			v.memory = 4096
+			v.management_network_name = 'vagrant-v'
+			v.management_network_address = '192.168.56.2/24'
 		end
-		lumenthiS.vm.provision :shell, path: "scripts/centos-gitlab.sh", run: 'always'
+		tlaraineS.vm.provision :shell, path: "scripts/centos-gitlab.sh", run: 'always'
 	end
 end
