@@ -6,19 +6,23 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-	config.vm.box = "centos/8"
+	# config.vm.box = "centos/8"
+	config.vm.box = "bento/debian-11"
+	config.vm.box_url = "file:///home/tlaraine/21-school/iot/debian11.box"
+	
 	config.vm.define "tlaraineS" do |tlaraineS|
 		tlaraineS.vm.hostname = "tlaraineS"
-		config.vm.box_url = "file:///home/tlaraine/21-school/iot/CentOS-8.box"
+		# config.vm.box_url = "file:///home/tlaraine/21-school/iot/CentOS-8.box"
 
 		tlaraineS.vm.network "private_network",
 			:ip => "192.168.56.110"
 			tlaraineS.vm.provider :v do |v|
-			v.cpus = 4
-			v.memory = 4096
+			v.cpus = 2
+			v.memory = 2096
 			v.management_network_name = 'vagrant-v'
 			v.management_network_address = '192.168.56.2/24'
 		end
-		tlaraineS.vm.provision :shell, path: "scripts/centos-gitlab.sh", run: 'always'
+		# tlaraineS.vm.provision :shell, path: "scripts/centos-gitlab.sh", run: 'always'
+		tlaraineS.vm.provision :shell, path: "scripts/debian-gitlab.sh", run: 'always'
 	end
 end
