@@ -1,7 +1,7 @@
 #docker stop $(docker ps -a -q)
 #docker rm $(docker ps -a -q)
 
-# ===============k3d installation===============
+echo "===============k3d installation==============="
 
 wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 echo "source <(k3d completion bash)" >> ~/.bashrc

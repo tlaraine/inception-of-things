@@ -1,28 +1,38 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
+
+MASTER_NODE = 'TlaraineS'
+MASTER_HOSTNAME = 'TlaraineS'
+MASTER_IP = '192.168.56.110'
+
+
+# machines config
+MEM = 4096
+CPU = 4
+
+# create machines config
 Vagrant.configure("2") do |config|
-	# config.vm.box = "centos/8"
 	config.vm.box = "bento/debian-11"
 	config.vm.box_url = "file:///home/tlaraine/21-school/iot/debian11.box"
 	
-	config.vm.define "tlaraineS" do |tlaraineS|
-		tlaraineS.vm.hostname = "tlaraineS"
-		# config.vm.box_url = "file:///home/tlaraine/21-school/iot/CentOS-8.box"
+	config.vm.provider "virtualbox" do |v|
+		v.memory = MEM
+		v.cpus = CPU
+		# for connect with SSH on both machines with no password
+		id_rsa_pub = File.read("#{Dir.home}/.ssh/id_rsa.pub")
+  		config.vm.provision "copy ssh public key", type: "shell",
+    	  inline: "echo \"#{id_rsa_pub}\" >> /home/vagrant/.ssh/authorized_keys"
+	end
 
-		tlaraineS.vm.network "private_network",
-			:ip => "192.168.56.110"
-			tlaraineS.vm.provider :v do |v|
-			v.cpus = 2
-			v.memory = 2096
-			v.management_network_name = 'vagrant-v'
-			v.management_network_address = '192.168.56.2/24'
+  # master node config
+	config.vm.define MASTER_NODE do |master|
+		master.vm.hostname = MASTER_HOSTNAME
+		master.vm.network :private_network, ip: MASTER_IP
+		# configure shared folder
+		master.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+		# run script for master node with argument
+		master.vm.provision "shell", privileged: true, path: "scripts/debian-gitlab.sh", args: [MASTER_IP]
+		master.vm.provider "virtualbox" do |v|
+			v.name = MASTER_NODE
 		end
-		# tlaraineS.vm.provision :shell, path: "scripts/centos-gitlab.sh", run: 'always'
-		tlaraineS.vm.provision :shell, path: "scripts/debian-gitlab.sh", run: 'always'
 	end
 end
