@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'http://192.168.56.110/root/k3d.git '
+    repoURL: 'http://192.168.56.110/root/k3d.git'
     path: manifests
     targetRevision: HEAD
   destination:

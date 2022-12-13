@@ -23,8 +23,7 @@ sudo cp argocd /usr/bin/
 # Check namespaces
 # sudo kubectl get ns
 
-# =========wil app===========
-# sudo kubectl apply -f confs/wil-app.yml
+
 # Connect ArgoCD to that repository
 sudo kubectl apply -f confs/config.yml
 
@@ -40,7 +39,7 @@ while [ true ]
 		fi
 	done;
 
-#sudo kubectl apply -f confs/wil-app.yml
+
 
 while [ true ]
 	do
@@ -51,6 +50,7 @@ while [ true ]
 			break
 		else
 			echo -n "\rInitializing cluster..."
+			sleep 2
 		fi
 	done;
 # ===========ArgoCD UI============= 

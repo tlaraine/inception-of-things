@@ -1,21 +1,3 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: argocd-wilapp
-#   namespace: argocd
-# spec:
-#   destination:
-#     namespace: dev
-#     server: https://kubernetes.default.svc
-#   project: default
-#   source:
-#     repoURL: https://github.com/lnicosia/lnicosia-IoT-config
-#     path: .
-#     targetRevision: master
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

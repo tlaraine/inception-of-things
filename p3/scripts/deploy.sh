@@ -24,7 +24,7 @@ sudo cp argocd /usr/bin/
 # sudo kubectl get ns
 
 # =========wil app===========
-# sudo kubectl apply -f confs/wil-app.yml
+
 # Connect ArgoCD to that repository
 sudo kubectl apply -f confs/config.yml
 
@@ -40,7 +40,6 @@ while [ true ]
 		fi
 	done;
 
-#sudo kubectl apply -f confs/wil-app.yml
 
 while [ true ]
 	do
@@ -51,6 +50,7 @@ while [ true ]
 			break
 		else
 			echo -n "\rInitializing cluster..."
+			sleep 2
 		fi
 	done;
 # ===========ArgoCD UI============= 
@@ -67,7 +67,7 @@ done &
 sudo apt-get install xclip -y
 
 # Check the argoCD ui
-# firefox https://localhost:8080
+# https://localhost:8080
 
 # Connect to the argocd app (https://localhost:8080)
 # Username: admin
