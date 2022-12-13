@@ -44,7 +44,7 @@ while [ true ]
 while [ true ]
 	do
 		i=$(sudo kubectl get pod -n dev | grep "1/1" | wc -l)
-		if [ $i = 7 ]
+		if [ $i = 1 ]
 		then
 			echo "\rReady!"
 			break
