@@ -1,5 +1,5 @@
 # ===============Docker installation===============
-#sudo sh /usr/local/bin/k3s-uninstall.sh
+# sudo sh /usr/local/bin/k3s-uninstall.sh
 # Dependencies
 sudo apt -y update
 sudo apt -y install apt-transport-https ca-certificates curl gnupg2 software-properties-common
