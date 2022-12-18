@@ -31,3 +31,14 @@ echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 # Output must be "kubectl: Ok"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 rm -f kubectl
+rm -f kubectl.sha256
+
+# ===============k3d installation===============
+
+wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+echo "source <(k3d completion bash)" >> ~/.bashrc
+
+
+wget https://github.com/argoproj/argo-cd/releases/download/v2.5.2/argocd-linux-amd64 argocd -O argocd
+chmod +x argocd
+sudo mv argocd /usr/bin/

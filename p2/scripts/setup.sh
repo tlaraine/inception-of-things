@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo cp /usr/sbin/ifconfig /usr/bin/
+
 echo "alias k='kubectl'" >> /home/vagrant/.bashrc
 echo "alias c='clear'" >> /home/vagrant/.bashrc
 

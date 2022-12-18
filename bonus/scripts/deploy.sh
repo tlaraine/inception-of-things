@@ -1,19 +1,13 @@
 #docker stop $(docker ps -a -q)
 #docker rm $(docker ps -a -q)
 
-# ===============k3d installation===============
-
-wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-echo "source <(k3d completion bash)" >> ~/.bashrc
 
 sudo k3d cluster create TlaraineS
 sudo kubectl create namespace dev
 sudo kubectl create namespace gitlab
 sudo kubectl create namespace argocd
 sudo kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-wget https://github.com/argoproj/argo-cd/releases/download/v2.5.2/argocd-linux-amd64 argocd -O argocd
-chmod +x argocd
-sudo cp argocd /usr/bin/
+
 # Check if cluster is up
 # sudo kubectl get nodes
 
@@ -36,6 +30,7 @@ while [ true ]
 			break
 		else
 			echo -n "\rInitializing cluster..."
+			sleep 10
 		fi
 	done;
 
@@ -50,7 +45,7 @@ while [ true ]
 			break
 		else
 			echo -n "\rInitializing cluster..."
-			sleep 2
+			sleep 10
 		fi
 	done;
 # ===========ArgoCD UI============= 

@@ -12,7 +12,7 @@ spec:
           service:
             name: app-three
             port:
-              number: 3200
+              number: 80
   - host: app1.com
     http:
       paths:
@@ -22,7 +22,7 @@ spec:
           service:
             name: app-one
             port:
-              number: 3200
+              number: 80
   - host: app2.com
     http:
       paths:
@@ -32,4 +32,4 @@ spec:
           service:
             name: app-two
             port:
-              number: 3200
+              number: 80

@@ -12,4 +12,5 @@ sudo cp /var/lib/rancher/k3s/server/node-token /vagrant/scripts/
 echo "alias k='kubectl'" >> /home/vagrant/.bashrc
 echo "alias c='clear'" >> /home/vagrant/.bashrc
 
+sudo cp /usr/sbin/ifconfig /usr/bin/
 sudo cp /etc/rancher/k3s/k3s.yaml /vagrant/scripts/

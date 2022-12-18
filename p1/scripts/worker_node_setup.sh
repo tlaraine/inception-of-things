@@ -11,7 +11,7 @@ export INSTALL_K3S_EXEC="agent --server https://$1:6443 --token-file $TOKEN_FILE
 # download and run k3s agent
 curl -sfL https://get.k3s.io | sh -
 
-
+sudo cp /usr/sbin/ifconfig /usr/bin/
 sudo mkdir -p /etc/rancher/k3s
 sudo cp /vagrant/scripts/k3s.yaml /etc/rancher/k3s/
 

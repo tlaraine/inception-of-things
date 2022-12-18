@@ -35,7 +35,7 @@ spec:
     app: app-one
   ports:
     - protocol: TCP
-      port: 3200
+      port: 80
       targetPort: 8080
 
 ---
@@ -76,7 +76,7 @@ spec:
     app: app-two
   ports:
     - protocol: TCP
-      port: 3200
+      port: 80
       targetPort: 8080
 
 ---
@@ -117,5 +117,5 @@ spec:
     app: app-three
   ports:
     - protocol: TCP
-      port: 3200
+      port: 80
       targetPort: 8080
