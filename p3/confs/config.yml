@@ -13,7 +13,6 @@ spec:
     server: 'https://kubernetes.default.svc'
     namespace: dev
   syncPolicy:
-    timeout.reconciliation: 10s
     automated:
       prune: true
       selfHeal: true

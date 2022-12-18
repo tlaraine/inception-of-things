@@ -16,4 +16,5 @@ sudo mkdir -p /etc/rancher/k3s
 sudo cp /vagrant/scripts/k3s.yaml /etc/rancher/k3s/
 
 sudo mkdir -p /home/vagrant/.kube/
-sudo cp /vagrant/scripts/k3s.yaml  /home/vagrant/.kube/config
+sudo mv /vagrant/scripts/k3s.yaml  /home/vagrant/.kube/config
+sudo mv /vagrant/scripts/node-token  /var/lib/rancher/k3s/agent/ 
